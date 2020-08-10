@@ -1,0 +1,379 @@
+<!doctype html>
+<html  lang="en-us">
+ <head>
+  <title>CSC 406: Computer System I, 2019 Winter, Assignment #3</title>
+  <meta charset="UTF-8" />
+   <style>
+     h2 { text-align: center;}
+   </style>
+ </head>
+
+ <body>
+   <h2>CSC 406: Computer System I, 2019 Winter, Assignment #3</h2>
+   <p>
+     Last revised 2019 February 21
+   </p>
+   <p/>
+
+   <h3>Purpose:</h3>
+   To:
+   <ol type="1">
+     <li>Go over the basics of assembly language</li>
+     <li>Go over how to use a debugger</li>
+     <li>Go over the layout of an activation record</li>
+   </ol>
+   <p/>
+
+   <h3>Assignment</h3>
+    Please do the following:
+    <ol type="1">
+      <li>Download the program called <code>toAnalyzeCDM.zip</code> from COL</li>
+      <li>
+	Use an <code>sftp</code> program like <a href="http://filezilla-project.org/download.php?type=client">filezilla</a> to upload it to a ctilinux machine (like <code>140.192.36.184</code>)
+	Do <em>not</em> bother unzipping it on your local machine.
+      </li>
+      <li>
+	On the same machine unzip it with:
+<pre>
+$ <strong>unzip toAnalyzeCDM.zip</strong>
+</pre>
+      </li>
+      <li>Do <code>chmod u+x toAnalyze</code> to make tell Unix that it is an executable program
+      <li>Analyze it with gdb: <code>gdb toAnalyze</code>.
+	  It has a structure like:
+	<pre>
+int bar (/* some number of args */)
+{
+  /* Some number of local vars */
+
+  return( /* something */ );
+}
+
+
+int foo (/* some number of args */)
+{
+  /* Some if-statement */
+
+  /* Some number of local vars */
+
+  /* Some code, including call(s) to bar() */
+
+  return( /* something */ );
+}
+
+
+int main ()
+{
+  /* Some number of local vars, including call(s) to foo() */
+  return(0);
+}
+	</pre>
+    </ol>
+    
+    <h3>Answer the following:</h3>
+    <ol type="1">
+      <li><h4>(20 Points) Assembly language understanding (1):</h4>
+	The assembly language for <code>bar()</code> is:
+	<pre>
+(gdb) <strong>disass bar</strong>
+Dump of assembler code for function bar:
+   0x00000000004004cd &lt;+0&gt;:	push   %rbp
+   0x00000000004004ce &lt;+1&gt;:	mov    %rsp,%rbp
+   0x00000000004004d1 &lt;+4&gt;:	mov    %edi,-0x14(%rbp)
+   0x00000000004004d4 &lt;+7&gt;:	mov    -0x14(%rbp),%eax
+   0x00000000004004d7 &lt;+10&gt;:	add    %eax,%eax
+   0x00000000004004d9 &lt;+12&gt;:	mov    %eax,-0x4(%rbp)
+   0x00000000004004dc &lt;+15&gt;:	mov    -0x4(%rbp),%eax
+   0x00000000004004df &lt;+18&gt;:	pop    %rbp
+   0x00000000004004e0 &lt;+19&gt;:	retq   
+End of assembler dump.
+	</pre>
+	Give a 1-2 sentence description of the purpose of each instruction.<br/>
+        <strong>I am more interested in the <em>why</em> than the <em>what</em>.</strong>
+        <table border="1">
+	  <tr><th>Instruction:</th> <th>Purpose:</th></tr>
+	  <tr>
+	    <td>push   %rbp</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>mov    %rsp,%rbp</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>mov    %edi,-0x14(%rbp)</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>mov    -0x14(%rbp),%eax</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>add    %eax,%eax</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>mov    %eax,-0x4(%rbp)</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>mov    -0x4(%rbp),%eax</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>pop    %rbp</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+	  <tr>
+	    <td>retq</td>
+	    <td>___________________________________________________________</td>
+	  </tr>
+        </table>
+      </li>
+      <p/>
+
+      <li><h4>(10 Points) Assembly language understanding (2):</h4>
+	Write a C function that does what <code>bar()</code> does.<br/>
+	You won't be able to figure out the names of my parameters var(s) and local var(s); just make up your own name(s).
+      </li>
+      <p/>
+
+      <li><h4>(20 Points) Activation Records (1):</h4>
+	Stop the program at its <em>second</em> call to <code>bar()</code>.
+	When I did so I got the following:
+	<pre>
+(gdb) <strong>break bar</strong>
+Breakpoint 1 at 0x4004d1
+(gdb) <strong>run</strong>
+Starting program: /home/instructor/Documents/Academic/DePaul/Classes/CSC373/20178-4SumI/Assign3/toAnalyze 
+
+Breakpoint 1, 0x00000000004004d1 in bar ()
+Missing separate debuginfos, use: debuginfo-install glibc-2.17-222.el7.x86_64
+(gdb) <strong>c</strong>
+Continuing.
+
+Breakpoint 1, 0x00000000004004d1 in bar ()
+(gdb) <strong>stepi</strong>
+0x00000000004004d4 in bar ()
+(gdb) <strong>stepi</strong>
+0x00000000004004d7 in bar ()
+(gdb) <strong>stepi</strong>
+0x00000000004004d9 in bar ()
+(gdb) <strong>stepi</strong>
+0x00000000004004dc in bar ()
+(gdb) <strong>stepi</strong>
+0x00000000004004df in bar ()
+(gdb) <strong>info reg</strong>
+rax            0x4	4
+rbx            0x0	0
+rcx            0x400560	4195680
+rdx            0x2	2
+rsi            0x4	4
+rdi            0x2	2
+rbp            0x7fffffffdbd0	0x7fffffffdbd0
+rsp            0x7fffffffdbd0	0x7fffffffdbd0
+r8             0x7ffff7dd5e80	140737351868032
+r9             0x0	0
+r10            0x7fffffffd760	140737488344928
+r11            0x7ffff7a30350	140737348043600
+r12            0x4003e0	4195296
+r13            0x7fffffffdd30	140737488346416
+r14            0x0	0
+r15            0x0	0
+rip            0x4004df	0x4004df &lt;bar+18&gt;
+eflags         0x202	[ IF ]
+cs             0x33	51
+ss             0x2b	43
+ds             0x0	0
+es             0x0	0
+fs             0x0	0
+gs             0x0	0
+	</pre>
+	Write the activation record for <code>bar()</code> when <code>%rip</code> gets to 0x00000000004004df.<br/>
+        Under <strong>Value</strong> put the numeric value held at that address.<br/>
+        Under <strong>Purpose</strong> put one of the following:
+        <ol type="a">
+	  <li>not part of <code>bar()</code>'s activation record</li>
+	  <li>argument to <code>bar()</code></li>
+	  <li>the address inx <code>foo()</code> to which <code>rip</code> should return</li>
+	  <li>the stored <code>rbp</code> address for <code>foo()</code></li>
+	  <li>local variable to <code>bar()</code></li>
+	  <li>in the activation record of <code>bar()</code>, but not used</li>
+        </ol>
+
+	<table border="1">
+	  <tr>
+	    <th></th>
+	    <th>Address:</th>
+	    <th>Value:</th>
+	    <th>Purpose:</th>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp + 0x10</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp + 0xC</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp + 0x8</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp + 0x4</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td>rbp --&gt;</td>
+	    <td>rbp + 0x0</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp - 0x4</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp - 0x8</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp - 0xC</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp - 0x10</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp - 0x14</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	  <tr>
+	    <td></td>
+	    <td>rbp - 0x18</td>
+	    <td>___________</td>
+	    <td>___________</td>
+	  </tr>
+	</table>
+      </li>
+      <p/>
+
+      <li><h4>(10 Points) Assembly language understanding (3):</h4>
+	What are the value(s) that <code>foo()</code>
+	obtains as arguments from <code>main()</code>?<br/>
+	In which registers are they passed?<br/>
+	Give offset(s) from <code>rbp</code> from within <code>foo()</code>'s
+	activation record <em>or</em> give the name(s) of the registers.
+      </li>
+      <p/>
+
+      <li><h4>(10 Points) Assembly language understanding (4):</h4>
+	How many <em>local variables</em> does <code>foo()</code> have?<br/>
+	Where are they on the stack?<br/>
+	Give an offset from <code>rbp</code> from within <code>foo()</code>'s
+	activation record.
+      </li>
+      <p/>
+
+      <li>
+	<h4>(20 Points) Debugger usage (1):</h4>
+	<p>
+	  <code>foo()</code> has a recursive call.
+	  Inside of <code>foo()</code> what are the values that both its
+	  <em>arguments</em> and <em>local variables</em>
+	  take on when rip is at address <code>0x00400518</code>?
+	  At the <em>top</em> of the table give the offset from <code>rbp</code>
+	  (the hexadecimal number added to <code>rbp</code>
+	  to get the address of the variable)
+	  of the parameter or local variable.
+	  (I may have tried to fool you the the number of variables.)
+	</p>
+
+	<p>
+	  In the body of the table write the values that that variable has 
+	  when you hit address <em>local variables</em>.
+	</p>
+
+	<table border="1">
+	  <tr>
+	    <th>Call:</th>
+	    <th>rbp + _____</th>
+	    <th>rbp + _____</th>
+	    <th>rbp + _____</th>
+	    <th>rbp + _____</th>
+	    <th>rbp + _____</th>
+	    <th>rbp + _____</th>
+	  </tr>
+	  <tr>
+	    <td align="center">1</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	  </tr>
+	  <tr>
+	    <td align="center">2</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	    <td>________</td>
+	  </tr>
+	</table>
+      </li>
+      <p/>
+
+      <li><h4>(5 Points) Debugger usage (2):</h4>
+	What value does <code>foo()</code> return to <code>main()</code>?
+      </li>
+      <p/>
+
+      <li><h4>(5 Points) Assembly language understanding (5):</h4>
+	<code>foo()</code> calls <code>bar()</code>.
+	<code>bar()</code> starts at address 0x004004CD.
+	If you look at the machine code for <code>foo()</code>'s call to <code>bar()</code>, however, you'll see that the actual number in the function call is 0xFFFF,FFB8
+	<pre>
+0x04004e1 &lt;foo&gt;:
+  . . .
+  40050e:	89 c7                	mov    %eax,%edi
+  400510:	e8 b8 ff ff ff       	callq  4004cd &lt;bar&gt;
+  400515:	89 45 f8             	mov    %eax,-0x8(%rbp)
+  . . .
+	</pre>
+	<ol type="a">
+	  <li>
+	    What to what number did the CPU add with 0xFFFF,FFB8
+	    to get the address of <code>bar()</code>, 0x0040,04CD?
+	  </li>
+	  <li>Do this addition.  Compute 0x0040,04CD.</li>
+	</ol>
+      </li>
+      <p/>
+
+    </ol>
+ </body>
+
+</html>
