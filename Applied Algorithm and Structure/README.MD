@@ -14,8 +14,9 @@ Implement the bottom-up algorithm for finding the longest common subsequence of 
   -If the left value of current cell greater or equal to the top value of current cell, then current cell value equals to the left cell value.  
   -If the left value and the top value are same, put the number in upper left cell plus 1 into current cell.  
   5. Return the most lower right cell, that is the value we want.  
-<br>
-2.  **[Longest Common Subsequence Version 2](https://github.com/edwardlin0524/Grad-Courseworks/blob/master/Applied%20Algorithm%20and%20Structure/Dynamic%20Programming/LCSv2.java)** 
+<br>  
+
+2.  **[Longest Common Subsequence Version 2](https://github.com/edwardlin0524/Grad-Courseworks/blob/master/Applied%20Algorithm%20and%20Structure/Dynamic%20Programming/LCSv2.java)**  
 Building on the **[Longest Common Subsequence](https://github.com/edwardlin0524/GradCourseworks/blob/master/Applied%20Algorithm%20and%20Structure/Dynamic%20Programming/LCS.java)**  Program, find the LCS and print it.  
 <p align="center"><img src="https://github.com/edwardlin0524/Grad-Courseworks/blob/master/Applied%20Algorithm%20and%20Structure/Dynamic%20Programming/LCSv2.jpg" width="300"></p>  
 
