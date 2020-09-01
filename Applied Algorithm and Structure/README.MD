@@ -56,3 +56,12 @@ Convert string 'depaul' to 'declaw', find the minimum edit distance and return i
   </ol>
 
 </li>
+
+<li>  
+  
+  **[Optimal Rod Cutting](https://github.com/edwardlin0524/Grad-Courseworks/blob/master/Applied%20Algorithm%20and%20Structure/Dynamic%20Programming/ORC.java)**  
+  Given a rod of length n and an array which contains prices of all pieces smaller than n, find the maximum obtainable prices. The main idea is that we make a cut at different positions, then compare the values obtained after a cut and find the maximum price. Take following pictures for example, if the length of rod is 4, we can cut the rod at (1,3),(2,2),(4)(which means no cut), we find the maximum obtainable value in these combinations is 10 (because we cut at position 1 and 4).
+<p align="center"><img src="https://github.com/edwardlin0524/Grad-Courseworks/blob/master/Applied%20Algorithm%20and%20Structure/Dynamic%20Programming/ORC.jpg" width="50%"></p>
+ </li> 
+
+</li>
